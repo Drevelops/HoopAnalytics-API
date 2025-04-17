@@ -1,10 +1,14 @@
 from typing import Optional
 from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel, Field
+import models
+from database import engine
 
 
 app = FastAPI(title="HoopAnalytics API",
               version="0.3")
+
+models.Base.metadata.create_all(bind=engine)
 
 class PlayerModel(BaseModel):
     id: Optional[int] = None
