@@ -1,22 +1,30 @@
-from pydantic import BaseModel, Field
-from typing import Optional
+from fastapi import APIRouter, Depends, HTTPException
+from sqlalchemy.orm import Session
+from typing import List
 
-class PlayerModel(BaseModel):
-    id: Optional[int] = None
-    name: str = Field(min_length=3)
-    position: str = Field(min_length=1)
-    height: str = Field(pattern=r"^[4-8]'(\d{1,2}\")?$")
-    weight: int = Field(gt=130, lt=350)
-    team_id: int =  Field(gt=0, lt=31)
-    team_name: str = Field(min_length=3)
-    age: int  = Field(ge=18, le=50)
-    college: str 
-    country: str = Field(min_length=2)
-    ppg: float = Field(ge=0.0)
-    apg: float = Field(ge=0.0)
-    rpg: float = Field(ge=0.0)
-    spg: float = Field(ge=0.0)
-    bpg: float = Field(ge=0.0)
-    fg_pct: float = Field(ge=0.0, le=1.0)
-    ft_pct: float = Field(ge=0.0, le=1.0)
-    threept_pct: float = Field(ge=0.0, le=1.0)
+from app.models.schemas import Player, PlayerCreate, PlayerUpdate
+from app.services import player_service
+from app.database import get_db
+
+router = APIRouter()
+
+@router.get('/', response_model=List[Player])
+def get_players(position: str = None, name: str = None, team: str = None, db: Session = Depends(get_db)):
+    return player_service.get_players(db, position, name, team)
+
+@router.get('/{player_id}', response_model=Player)
+def get_player(player_id: int, db: Session = Depends(get_db)):
+    return player_service.get_player_by_id(db, player_id)
+
+@router.post('/create_player', response_model=Player)
+def create_player(player: PlayerCreate, db: Session = Depends(get_db)):
+    return player_service.create_player(db, player)
+
+@router.put("/update_player/{player_id}", response_model=Player)
+def update_player(player_id: int, player: PlayerUpdate, db: Session = Depends(get_db)):
+    return player_service.update_player(db, player_id, player)
+
+@router.delete("/delete_player/{player_id}")
+def delete_player(player_id: int, db: Session = Depends(get_db)):
+    player_service.delete_player(db, player_id)
+    return {"message": "Player deleted successfully"}

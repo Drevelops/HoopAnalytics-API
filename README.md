@@ -21,8 +21,8 @@ HoopAnalytics API provides access to NBA player and team statistics with advance
 - FastAPI
 - PostgreSQL
 - SQLAlchemy
-- Pandas for data processing
-- Pytest for testing
+- Alembic for database migrations
+- Pydantic for data validation
 
 ### Frontend
 
@@ -32,6 +32,24 @@ HoopAnalytics API provides access to NBA player and team statistics with advance
 - Axios for API communication
 
 ## Installation
+
+### Setup PostgreSQL Database
+
+1. Install PostgreSQL if not already installed
+
+2. Create a new database:
+   ...
+   CREATE DATABASE hoopanalytics;
+   ...
+
+3. Create a .env file with your database credentials:
+   ...
+   POSTGRES_SERVER=localhost
+   POSTGRES_USER=your_username
+   POSTGRES_PASSWORD=your_password
+   POSTGRES_DB=hoopanalytics
+   POSTGRES_PORT=5432
+   ...
 
 ### Setup Backend
 
@@ -55,10 +73,19 @@ HoopAnalytics API provides access to NBA player and team statistics with advance
    pip install -r requirements.txt
    ```
 
-4. Run the development server
-   ```
-   uvicorn app.main:app --reload
-   ```
+4. Run database migrations
+   ...
+   alembic upgrade head
+   ...
+
+5.Seed the database with initial data
+...
+python scripts/seed_data.py
+... 6. Run the development server
+
+```
+uvicorn app.main:app --reload
+```
 
 ### Setup Frontend (once developed)
 
@@ -85,6 +112,14 @@ Once the server is running, API documentation is available at:
 
 - Swagger UI: http://localhost:8000/docs
 - ReDoc: http://localhost:8000/redoc
+
+## API Endpoints
+
+GET /api/v1/players/: Get all players with optional filtering
+GET /api/v1/players/{player_id}: Get a specific player by ID
+POST /api/v1/players/create_player: Create a new player
+PUT /api/v1/players/update_player/{player_id}: Update an existing player
+DELETE /api/v1/players/delete_player/{player_id}: Delete a player
 
 ## Project Status
 

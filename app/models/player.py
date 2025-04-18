@@ -1,10 +1,10 @@
-from database import Base
+from app.database import Base
 from sqlalchemy import Column, Integer, String, Float
 
 class Players(Base):
     __tablename__ = 'players'
 
-    id = Column(Integer, primary_key=True, index=True)
+    id = Column(Integer, primary_key=True, index=True, autoincrement=True)
     name = Column(String)
     position = Column(String)
     height= Column(String)
