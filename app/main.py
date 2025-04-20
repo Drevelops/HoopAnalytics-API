@@ -1,11 +1,12 @@
 from fastapi import FastAPI
-from app.api import players
+from app.api import players, auth
 from app.core.config import settings
 from app.database import engine
-import app.models.player as models
+from app.models import player, user
+from app.api import auth
+from app.database import Base
 
-
-models.Base.metadata.create_all(bind=engine)
+Base.metadata.create_all(bind=engine)
 
 
 app = FastAPI(
@@ -18,6 +19,12 @@ app.include_router(
     players.router,
     prefix=f"{settings.API_V1_STR}/players",
     tags=["players"]
+)
+
+app.include_router(
+    auth.router,
+    prefix=f"{settings.API_V1_STR}/auth",
+    tags=["auth"]
 )
 
 @app.get('/')
