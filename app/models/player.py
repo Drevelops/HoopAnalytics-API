@@ -1,5 +1,6 @@
 from app.database import Base
-from sqlalchemy import Column, Integer, String, Float
+from sqlalchemy import Column, Integer, String, Float, ForeignKey
+from sqlalchemy.orm import relationship
 
 class Players(Base):
     __tablename__ = 'players'
@@ -9,11 +10,22 @@ class Players(Base):
     position = Column(String)
     height= Column(String)
     weight = Column(Integer)
-    team_id = Column(Integer)
+    team_id = Column(Integer,ForeignKey('teams.id'))
     team_name = Column(String)
     age = Column(Integer)
     college = Column(String)
     country = Column(String)
+
+    stats = relationship("PlayerStats", back_populates="player")
+    team = relationship("Team",back_populates="players")
+
+class PlayerStats(Base):
+    __tablename__ = 'player_stats'
+
+    id = Column(Integer, primary_key=True, index=True, autoincrement=True)
+    player_id = Column(Integer,ForeignKey('players.id'))
+    season =  Column(String)
+
     ppg = Column(Float)
     apg = Column(Float)
     rpg = Column(Float)
@@ -22,3 +34,5 @@ class Players(Base):
     fg_pct = Column(Float)
     ft_pct = Column(Float)
     threept_pct = Column(Float)
+
+    player = relationship("Players", back_populates="stats")
