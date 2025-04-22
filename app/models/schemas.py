@@ -1,5 +1,6 @@
 from typing import Optional
 from pydantic import BaseModel, Field, EmailStr
+from typing import List
 
 class PlayerBase(BaseModel):
     name: str = Field(min_length=3)
@@ -49,6 +50,24 @@ class PlayerStats(PlayerStatsBase):
 
     class Config:
         model_config = {"from_attributes": True}
+
+class TeamBase(BaseModel):
+    team_id: int
+    team_name: str
+    team_abbreviation: str
+    city: str
+    conference: str
+    division: str
+    arena_name: str
+    head_coach: str
+    founded_year: int
+    team_colors: List[str]
+    logo_url: str
+    website_url: str
+    current_season_wins: int
+    current_season_losses: int
+    playoff_appearances: int
+    championship_titles: int
 
 class UserBase(BaseModel):
     username: str
