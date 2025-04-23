@@ -1,5 +1,5 @@
 from typing import Optional
-from pydantic import BaseModel, Field, EmailStr
+from pydantic import BaseModel, Field, EmailStr, HttpUrl
 from typing import List
 
 class PlayerBase(BaseModel):
@@ -52,23 +52,35 @@ class PlayerStats(PlayerStatsBase):
         model_config = {"from_attributes": True}
 
 class TeamBase(BaseModel):
-    team_id: int
-    team_name: str
-    team_abbreviation: str
-    city: str
-    conference: str
-    division: str
-    arena_name: str
-    head_coach: str
-    founded_year: int
+    id: int = Field(gt=0, lt=31)
+    team_name: str = Field(min_length=3)
+    team_abbreviation: str = Field(max_length=3)
+    city: str = Field(min_length=3)
+    conference: str = Field(min_length=3)
+    division: str = Field(min_length=3)
+    arena_name: str = Field(min_length=3)
+    head_coach: str = Field(min_length=3)
+    founded_year: int = Field(max_length=4)
     team_colors: List[str]
-    logo_url: str
-    website_url: str
-    current_season_wins: int
-    current_season_losses: int
-    playoff_appearances: int
-    championship_titles: int
+    logo_url: HttpUrl = Field(description="URL to the team's Logo image")
+    website_url:  HttpUrl = Field(description="The official website URL of the team",)
+    current_season_wins: int = Field(max_length=2)
+    current_season_losses: int = Field(max_length=2)
+    playoff_appearances: int = Field(max_length=3)
+    championship_titles: int = Field(max_length=2)
 
+class TeamCreate(TeamBase):
+    id: Optional[int] = None
+    pass
+
+class TeamUpdate(TeamBase):
+    pass
+class Team(TeamBase):
+    id:int
+
+    class Config:
+        model_config = {"from_attributes": True}
+        
 class UserBase(BaseModel):
     username: str
     email: EmailStr

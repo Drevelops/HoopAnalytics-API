@@ -10,14 +10,13 @@ class Players(Base):
     position = Column(String)
     height= Column(String)
     weight = Column(Integer)
-    team_id = Column(Integer,ForeignKey('teams.id'))
+    team_id = Column(Integer)
     team_name = Column(String)
     age = Column(Integer)
     college = Column(String)
     country = Column(String)
 
     stats = relationship("PlayerStats", back_populates="player")
-    team = relationship("Team",back_populates="players")
 
 class PlayerStats(Base):
     __tablename__ = 'player_stats'
