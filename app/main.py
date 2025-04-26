@@ -1,5 +1,5 @@
 from fastapi import FastAPI
-from app.api import players, auth
+from app.api import players, auth, teams
 from app.core.config import settings
 from app.database import engine
 from app.models import player, user
@@ -25,6 +25,12 @@ app.include_router(
     auth.router,
     prefix=f"{settings.API_V1_STR}/auth",
     tags=["auth"]
+)
+
+app.include_router(
+    teams.router,
+    prefix = f"{settings.API_V1_STR}/teams",
+    tags=["teams"]
 )
 
 @app.get('/')

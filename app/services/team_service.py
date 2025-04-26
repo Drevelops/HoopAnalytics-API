@@ -44,7 +44,7 @@ def create_team(db: Session, team: TeamCreate) -> Teams:
     db.refresh(db_team)
     return db_team
 
-def update_player(db: Session, team_id: int, team: TeamUpdate) -> Teams:
+def update_team(db: Session, team_id: int, team: TeamUpdate) -> Teams:
     """Update an existing player"""
     db_team = get_team_by_id(db, team_id)
     
@@ -55,3 +55,9 @@ def update_player(db: Session, team_id: int, team: TeamUpdate) -> Teams:
     db.commit()
     db.refresh(db_team)
     return db_team
+
+def delete_team(db:Session,team_id:int):
+    '''Delete Team'''
+    db_teams = get_team_by_id(db,team_id)
+    db.delete(db_teams)
+    db.commit()
