@@ -6,6 +6,7 @@ sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 from app.database import Session
 from app.models.player import Players, PlayerStats
+from app.models.team import Teams
 
 initial_stats = [
     {"id": 1,
@@ -132,12 +133,186 @@ initial_players = [
     }
 ]
 
+nba_teams = [
+    {
+        "team_name": "Boston Celtics",
+        "team_abbreviation": "BOS",
+        "city": "Boston",
+        "conference": "Eastern",
+        "division": "Atlantic",
+        "arena_name": "TD Garden",
+        "head_coach": "Joe Mazzulla",
+        "founded_year": 1946,
+        "team_colors": ["Green", "White", "Black", "Gold"],
+        "logo_url": "https://cdn.nba.com/logos/nba/1610612738/global/L/logo.svg",
+        "website_url": "https://www.nba.com/celtics/",
+        "current_season_wins": 64,
+        "current_season_losses": 18,
+        "playoff_appearances": 60,
+        "championship_titles": 18
+    },
+    {
+        "team_name": "Los Angeles Lakers",
+        "team_abbreviation": "LAL",
+        "city": "Los Angeles",
+        "conference": "Western",
+        "division": "Pacific", 
+        "arena_name": "Crypto.com Arena",
+        "head_coach": "JJ Redick",
+        "founded_year": 1947,
+        "team_colors": ["Purple", "Gold"],
+        "logo_url": "https://cdn.nba.com/logos/nba/1610612747/global/L/logo.svg",
+        "website_url": "https://www.nba.com/lakers/",
+        "current_season_wins": 47,
+        "current_season_losses": 35,
+        "playoff_appearances": 63,
+        "championship_titles": 17
+    },
+    {
+        "team_name": "Golden State Warriors",
+        "team_abbreviation": "GSW",
+        "city": "San Francisco",
+        "conference": "Western",
+        "division": "Pacific",
+        "arena_name": "Chase Center",
+        "head_coach": "Steve Kerr",
+        "founded_year": 1946,
+        "team_colors": ["Royal Blue", "Golden Yellow"],
+        "logo_url": "https://cdn.nba.com/logos/nba/1610612744/global/L/logo.svg",
+        "website_url": "https://www.nba.com/warriors/",
+        "current_season_wins": 46,
+        "current_season_losses": 36,
+        "playoff_appearances": 41,
+        "championship_titles": 7
+    },
+    {
+        "team_name": "Miami Heat",
+        "team_abbreviation": "MIA",
+        "city": "Miami",
+        "conference": "Eastern",
+        "division": "Southeast",
+        "arena_name": "Kaseya Center",
+        "head_coach": "Erik Spoelstra",
+        "founded_year": 1988,
+        "team_colors": ["Red", "Black", "Yellow"],
+        "logo_url": "https://cdn.nba.com/logos/nba/1610612748/global/L/logo.svg",
+        "website_url": "https://www.nba.com/heat/",
+        "current_season_wins": 46,
+        "current_season_losses": 36,
+        "playoff_appearances": 24,
+        "championship_titles": 3
+    },
+    {
+        "team_name": "Milwaukee Bucks",
+        "team_abbreviation": "MIL",
+        "city": "Milwaukee",
+        "conference": "Eastern",
+        "division": "Central",
+        "arena_name": "Fiserv Forum",
+        "head_coach": "Doc Rivers",
+        "founded_year": 1968,
+        "team_colors": ["Green", "Cream", "Blue"],
+        "logo_url": "https://cdn.nba.com/logos/nba/1610612749/global/L/logo.svg",
+        "website_url": "https://www.nba.com/bucks/",
+        "current_season_wins": 49,
+        "current_season_losses": 33,
+        "playoff_appearances": 36,
+        "championship_titles": 2
+    },
+    {
+        "team_name": "New York Knicks",
+        "team_abbreviation": "NYK",
+        "city": "New York",
+        "conference": "Eastern",
+        "division": "Atlantic",
+        "arena_name": "Madison Square Garden",
+        "head_coach": "Tom Thibodeau",
+        "founded_year": 1946,
+        "team_colors": ["Blue", "Orange", "Silver", "Black"],
+        "logo_url": "https://cdn.nba.com/logos/nba/1610612752/global/L/logo.svg",
+        "website_url": "https://www.nba.com/knicks/",
+        "current_season_wins": 50,
+        "current_season_losses": 32,
+        "playoff_appearances": 43,
+        "championship_titles": 2
+    },
+    {
+        "team_name": "Denver Nuggets",
+        "team_abbreviation": "DEN",
+        "city": "Denver",
+        "conference": "Western",
+        "division": "Northwest",
+        "arena_name": "Ball Arena",
+        "head_coach": "Michael Malone",
+        "founded_year": 1967,
+        "team_colors": ["Navy Blue", "Gold", "Red"],
+        "logo_url": "https://cdn.nba.com/logos/nba/1610612743/global/L/logo.svg",
+        "website_url": "https://www.nba.com/nuggets/",
+        "current_season_wins": 57,
+        "current_season_losses": 25,
+        "playoff_appearances": 31,
+        "championship_titles": 1
+    },
+    {
+        "team_name": "Philadelphia 76ers",
+        "team_abbreviation": "PHI",
+        "city": "Philadelphia",
+        "conference": "Eastern",
+        "division": "Atlantic",
+        "arena_name": "Wells Fargo Center",
+        "head_coach": "Nick Nurse",
+        "founded_year": 1946,
+        "team_colors": ["Blue", "Red", "White", "Grey"],
+        "logo_url": "https://cdn.nba.com/logos/nba/1610612755/global/L/logo.svg",
+        "website_url": "https://www.nba.com/sixers/",
+        "current_season_wins": 47,
+        "current_season_losses": 35,
+        "playoff_appearances": 52,
+        "championship_titles": 3
+    },
+    {
+        "team_name": "Phoenix Suns",
+        "team_abbreviation": "PHX",
+        "city": "Phoenix",
+        "conference": "Western",
+        "division": "Pacific",
+        "arena_name": "Footprint Center",
+        "head_coach": "Mike Budenholzer",
+        "founded_year": 1968,
+        "team_colors": ["Purple", "Orange", "Black", "Gray"],
+        "logo_url": "https://cdn.nba.com/logos/nba/1610612756/global/L/logo.svg",
+        "website_url": "https://www.nba.com/suns/",
+        "current_season_wins": 49,
+        "current_season_losses": 33,
+        "playoff_appearances": 32,
+        "championship_titles": 0
+    },
+    {
+        "team_name": "Dallas Mavericks",
+        "team_abbreviation": "DAL",
+        "city": "Dallas",
+        "conference": "Western",
+        "division": "Southwest",
+        "arena_name": "American Airlines Center",
+        "head_coach": "Jason Kidd",
+        "founded_year": 1980,
+        "team_colors": ["Royal Blue", "Navy Blue", "Silver", "Black"],
+        "logo_url": "https://cdn.nba.com/logos/nba/1610612742/global/L/logo.svg",
+        "website_url": "https://www.nba.com/mavericks/",
+        "current_season_wins": 50,
+        "current_season_losses": 32,
+        "playoff_appearances": 24,
+        "championship_titles": 1
+    }
+]
+
 def seed_database():
     db = Session()
     try:
         # Check if we already have data
         existing_players = db.query(Players).count()
         existing_stats = db.query(PlayerStats).count()
+        existing_teams = db.query(Teams)
         if existing_players > 0:
             print("Database already contains data. Skipping seed operation.")
             return
@@ -145,6 +320,7 @@ def seed_database():
         if existing_stats > 0:
             print("Database already contains data. Skipping seed operation.")
             return
+        
         # Add players
         for player_data in initial_players:
             player = Players(**player_data)
@@ -153,9 +329,15 @@ def seed_database():
         for stats_data in initial_stats:
             stat = PlayerStats(**stats_data)
             db.add(stat)
+        #add teams
+        for team_data in nba_teams:
+            team = Teams(**team_data)
+            db.add(team)
+
         db.commit()
         print(f"Added {len(initial_players)} players to the database.")
         print(f"Added {len(initial_stats)} players stats to the database.")
+        print(f"Added {len(nba_teams)} teams to the database.")
     except Exception as e:
         db.rollback()
         print(f"Error seeding database: {e}")

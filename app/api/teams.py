@@ -22,8 +22,8 @@ def create_team(team:TeamCreate,db:Session = Depends(get_db)):
 
 @router.put('/update_team/{team_id}',response_model=Team)
 def update_team(team_id: int ,team:TeamUpdate, db:Session = Depends(get_db)):
-    return team_service.update_team(team_id,team,db)
+    return team_service.update_team(db,team_id,team)
 
 @router.delete('/delete_team/{team_id}', response_model = Team)
-def delete_player(team_id:int,db:Session = Depends(get_db)):
+def delete_team(team_id:int,db:Session = Depends(get_db)):
     return team_service.delete_team(db,team_id)

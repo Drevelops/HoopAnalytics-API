@@ -27,6 +27,8 @@ def get_teams(
 
     if not teams and (team_name or conference or division):
         raise HTTPException(status_code=404, detail="No teams found matching the criteria")
+    
+    return teams
 
 def get_team_by_id(db: Session, team_id: int) -> Teams:
     """Get a team by ID"""
@@ -38,6 +40,13 @@ def get_team_by_id(db: Session, team_id: int) -> Teams:
 def create_team(db: Session, team: TeamCreate) -> Teams:
     """Create a new player"""
     team_data = team.model_dump(exclude_unset=True)
+    
+    if 'logo_url' in team_data and hasattr(team_data['logo_url'], '__str__'):
+        team_data['logo_url'] = str(team_data['logo_url'])
+    
+    if 'website_url' in team_data and hasattr(team_data['website_url'], '__str__'):
+        team_data['website_url'] = str(team_data['website_url'])
+
     db_team = Teams(**team_data)
     db.add(db_team)
     db.commit()

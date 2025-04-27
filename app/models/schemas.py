@@ -60,14 +60,14 @@ class TeamBase(BaseModel):
     division: str = Field(min_length=3)
     arena_name: str = Field(min_length=3)
     head_coach: str = Field(min_length=3)
-    founded_year: int = Field(gt=0, le=4)
+    founded_year: int = Field(gt=1923, le=2030)
     team_colors: List[str]
     logo_url: HttpUrl = Field(description="URL to the team's Logo image")
     website_url:  HttpUrl = Field(description="The official website URL of the team",)
-    current_season_wins: int = Field(gt=0, le=2)
-    current_season_losses: int = Field(gt=0, le=2)
-    playoff_appearances: int = Field(gt=0, le=3)
-    championship_titles: int = Field(gt=0, le=2)
+    current_season_wins: int = Field(ge=0, le=82)
+    current_season_losses: int = Field(ge=0, le=82)
+    playoff_appearances: int = Field(ge=0, le=100)
+    championship_titles: int = Field(ge=0, le=50)
 
 class TeamCreate(TeamBase):
     id: Optional[int] = None
