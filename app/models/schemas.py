@@ -7,21 +7,21 @@ class PlayerBase(BaseModel):
     position: str = Field(min_length=1)
     height: str = Field(pattern=r"^[4-8]'(\d{1,2}\")?$")
     weight: int = Field(gt=130, lt=350)
-    team_id: int = Field(gt=0, lt=31)
+    team_id: int = Field(gt=0)  
     team_name: str = Field(min_length=3)
     age: int = Field(ge=18, le=50)
     college: str
     country: str = Field(min_length=2)
 
 class PlayerCreate(PlayerBase):
-    id: Optional[int] = None
+    id: Optional[int]  = Field(None, gt=0)
     pass
 
 class PlayerUpdate(PlayerBase):
     pass
 
 class Player(PlayerBase):
-    id: int
+    id: int = Field(gt=0)
 
     class Config:
         model_config = {"from_attributes": True}
@@ -39,20 +39,19 @@ class PlayerStatsBase(BaseModel):
     threept_pct: float = Field(ge=0.0, le=1.0)
 
 class PlayerStatsCreate(PlayerStatsBase):
-    id: Optional[int] = None
+    id: Optional[int] = Field(None, gt=0)
     pass
 
 class PlayerStatsUpdate(PlayerStatsBase):
     pass
 
 class PlayerStats(PlayerStatsBase):
-    id: int
+    id: int = Field(gt=0)
 
     class Config:
         model_config = {"from_attributes": True}
 
 class TeamBase(BaseModel):
-    id: int = Field(gt=0, lt=31)
     team_name: str = Field(min_length=3)
     team_abbreviation: str = Field(max_length=3)
     city: str = Field(min_length=3)
@@ -70,13 +69,14 @@ class TeamBase(BaseModel):
     championship_titles: int = Field(ge=0, le=50)
 
 class TeamCreate(TeamBase):
-    id: Optional[int] = None
+    id: Optional[int] = Field(None, gt=0)
     pass
 
 class TeamUpdate(TeamBase):
     pass
+
 class Team(TeamBase):
-    id:int
+    id: int = Field(gt=0)
 
     class Config:
         model_config = {"from_attributes": True}

@@ -174,3 +174,7 @@ cython_debug/
 
 #alembic
 alembic/versions/__pycache__/
+alembic/versions/707b9ead4b71_create_teams_table.py
+alembic/versions/7c1c1e03a63c_create_teams_table.py
+scripts/cleartables.txt
+

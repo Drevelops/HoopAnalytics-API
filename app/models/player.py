@@ -1,11 +1,11 @@
 from app.database import Base
-from sqlalchemy import Column, Integer, String, Float, ForeignKey
+from sqlalchemy import Column, Integer, String, Float, ForeignKey, BigInteger
 from sqlalchemy.orm import relationship
 
 class Players(Base):
     __tablename__ = 'players'
 
-    id = Column(Integer, primary_key=True, index=True, autoincrement=True)
+    id = Column(BigInteger, primary_key=True, index=True)
     name = Column(String)
     position = Column(String)
     height= Column(String)
@@ -21,8 +21,8 @@ class Players(Base):
 class PlayerStats(Base):
     __tablename__ = 'player_stats'
 
-    id = Column(Integer, primary_key=True, index=True, autoincrement=True)
-    player_id = Column(Integer,ForeignKey('players.id'))
+    id = Column(BigInteger, primary_key=True, index=True, autoincrement=True)
+    player_id = Column(BigInteger,ForeignKey('players.id'))
     season =  Column(String)
 
     ppg = Column(Float)

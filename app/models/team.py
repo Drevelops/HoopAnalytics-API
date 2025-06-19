@@ -1,12 +1,12 @@
 from app.database import Base
-from sqlalchemy import Column, Integer, String, ForeignKey
+from sqlalchemy import Column, Integer, String, ForeignKey, BigInteger
 from sqlalchemy.orm import relationship
 from sqlalchemy.dialects.postgresql import ARRAY
 
 class Teams(Base):
     __tablename__ = 'teams'
 
-    id = Column(Integer, primary_key=True, index=True, autoincrement=True)
+    id = Column(BigInteger, primary_key=True, index=True)
     team_name = Column(String)
     team_abbreviation = Column(String)
     city = Column(String)
