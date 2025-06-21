@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react'
 import { Link, useParams } from 'react-router-dom'
+import PlayerStatsChart from '../components/PlayerStatsChart'
 
 export default function PlayerDetail() {
   const { player_id } = useParams()
@@ -35,7 +36,7 @@ export default function PlayerDetail() {
   }
 
   return (
-    <div className="container" style={{ maxWidth: '800px' }}>
+    <div className="container" style={{ maxWidth: '1200px' }}>
       {/* Back button */}
       <Link to="/players" className="nav-link" style={{ 
         color: '#1f2937', 
@@ -132,6 +133,7 @@ export default function PlayerDetail() {
               </div>
             </div>
           ))}
+           <PlayerStatsChart stats={stats} playerName={player.name} />
         </div>
       ) : (
         <p>No stats available for this player.</p>

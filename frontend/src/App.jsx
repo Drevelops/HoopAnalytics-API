@@ -5,6 +5,7 @@ import PlayersList from './pages/PlayersList'
 import PlayerDetail from './pages/PlayerDetail'
 import TeamsList from './pages/TeamsList'
 import TeamDetail from './pages/TeamDetail'
+import TeamAnalytics from './pages/TeamAnalytics'
 
 function App() {
   return (
@@ -17,6 +18,7 @@ function App() {
           <Route path="/players/:player_id" element={<PlayerDetail />} />
           <Route path="/teams" element={<TeamsList />} />
           <Route path="/teams/:team_id" element={<TeamDetail />} />
+          <Route path="/analytics" element={<TeamAnalytics/>} />
         </Routes>
       </div>
     </Router>

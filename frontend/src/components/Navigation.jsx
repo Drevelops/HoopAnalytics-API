@@ -13,6 +13,9 @@ export default function Navigation() {
         <Link to="/teams" className="nav-link">
           Teams
         </Link>
+        <Link to="/analytics" className="nav-link">
+        Analytics
+        </Link>
       </div>
     </nav>
   )

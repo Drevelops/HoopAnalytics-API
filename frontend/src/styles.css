@@ -223,3 +223,42 @@ body {
   background-color: #f3f4f6;
   transform: translateX(5px);
 }
+
+/* Chart container improvements */
+.chart-container {
+  position: relative;
+  height: 400px;
+  margin: 20px 0;
+}
+
+/* charts are responsive */
+canvas {
+  max-width: 100% !important;
+  height: auto !important;
+}
+
+/* Chart insights cards */
+.bg-yellow-50 { background-color: #fffbeb; }
+.bg-blue-50 { background-color: #eff6ff; }
+.bg-green-50 { background-color: #f0fdf4; }
+
+/* Dashboard specific styles */
+.space-y-2 > * + * {
+  margin-top: 0.5rem;
+}
+
+.space-y-3 > * + * {
+  margin-top: 0.75rem;
+}
+
+/* Hero gradient background */
+.hero-gradient {
+  background: linear-gradient(135deg, #1f2937 0%, #374151 100%);
+}
+
+/* Hover effect for dashboard items */
+.dashboard-item:hover {
+  background-color: #f9fafb;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
