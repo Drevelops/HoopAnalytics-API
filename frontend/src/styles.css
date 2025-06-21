@@ -185,3 +185,41 @@ body {
   padding: 2.5rem;
   color: #6b7280;
 }
+
+/* Team color circles */
+.color-circle {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  border: 1px solid #ccc;
+  display: inline-block;
+  margin-right: 5px;
+}
+
+/* Gradient backgrounds */
+.bg-gradient {
+  background: linear-gradient(135deg, #f3f4f6 0%, #e5e7eb 100%);
+}
+
+/* Yellow achievement background */
+.bg-yellow-50 {
+  background-color: #fffbeb;
+}
+
+/* Roster cards */
+.roster-card {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1rem;
+  border: 1px solid #e5e7eb;
+  border-radius: 0.5rem;
+  background-color: #f9f9f9;
+  transition: all 0.2s;
+  cursor: pointer;
+}
+
+.roster-card:hover {
+  background-color: #f3f4f6;
+  transform: translateX(5px);
+}
