@@ -31,9 +31,9 @@ export default function Dashboard() {
   useEffect(() => {
     // Fetch all data for dashboard
     Promise.all([
-      fetch('http://localhost:8000/api/v1/players/'),
-      fetch('http://localhost:8000/api/v1/teams/'),
-      fetch('http://localhost:8000/api/v1/players/stats')
+      fetch(`${import.meta.env.VITE_API_URL}/api/v1/players/`),
+      fetch(`${import.meta.env.VITE_API_URL}/api/v1/teams/`),
+      fetch(`${import.meta.env.VITE_API_URL}/api/v1/players/stats`)
     ])
     .then(async ([playersResponse, teamsResponse, statsResponse]) => {
       const playersData = await playersResponse.json()

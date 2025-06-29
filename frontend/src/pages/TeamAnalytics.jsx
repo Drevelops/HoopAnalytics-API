@@ -6,7 +6,7 @@ export default function TeamAnalytics() {
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
-    fetch('http://localhost:8000/api/v1/teams/')
+    fetch(`${import.meta.env.VITE_API_URL}/api/v1/teams/`)
       .then(response => response.json())
       .then(data => {
         setTeams(data)

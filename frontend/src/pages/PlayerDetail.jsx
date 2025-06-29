@@ -10,8 +10,9 @@ export default function PlayerDetail() {
 
   useEffect(() => {
     Promise.all([
-      fetch(`http://localhost:8000/api/v1/players/${player_id}`),
-      fetch(`http://localhost:8000/api/v1/players/${player_id}/stats`)
+      fetch(`${import.meta.env.VITE_API_URL}/api/v1/players/${player_id}`),
+      fetch(`${import.meta.env.VITE_API_URL}/api/v1/players/${player_id}/stats`),
+      fetch(`${import.meta.env.VITE_API_URL}/api/v1/players/`)
     ])
     .then(async ([playerResponse, statsResponse]) => {
       const playerData = await playerResponse.json()

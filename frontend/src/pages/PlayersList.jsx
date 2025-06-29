@@ -16,7 +16,7 @@ export default function PlayersList() {
   const uniquePositions = [...new Set(players.map(p => p.position))].sort()
 
   useEffect(() => {
-    fetch('http://localhost:8000/api/v1/players/')
+    fetch(`${import.meta.env.VITE_API_URL}/api/v1/players/`)
       .then(response => response.json())
       .then(data => {
         setPlayers(data)
