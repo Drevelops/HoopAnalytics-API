@@ -44,20 +44,20 @@ app.add_middleware(
 
 app.include_router(
     players.router,
-    prefix=f"{settings.API_V1_STR}/players",
+    prefix="/api/v1/players",
     tags=["players"]
 )
 
 app.include_router(
-    auth.router,
-    prefix=f"{settings.API_V1_STR}/auth",
-    tags=["auth"]
+    teams.router,
+    prefix="/api/v1/teams",
+    tags=["teams"]
 )
 
 app.include_router(
-    teams.router,
-    prefix=f"{settings.API_V1_STR}/teams",
-    tags=["teams"]
+    auth.router,
+    prefix="/api/v1/auth",
+    tags=["auth"]
 )
 
 @app.get('/')
