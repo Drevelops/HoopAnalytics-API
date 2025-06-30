@@ -30,10 +30,12 @@ export default function Dashboard() {
 
   useEffect(() => {
     // Fetch all data for dashboard
+     const baseUrl = 'https://web-production-eab4a.up.railway.app';
+
     Promise.all([
-      fetch(`${import.meta.env.VITE_API_URL}/api/v1/players/`),
-      fetch(`${import.meta.env.VITE_API_URL}/api/v1/teams/`),
-      fetch(`${import.meta.env.VITE_API_URL}/api/v1/players/stats/`)
+      fetch(`${baseUrl}/api/v1/players/`),
+      fetch(`${baseUrl}/api/v1/teams/`),
+      fetch(`${baseUrl}/api/v1/players/stats/`)
     ])
     .then(async ([playersResponse, teamsResponse, statsResponse]) => {
       const playersData = await playersResponse.json()
