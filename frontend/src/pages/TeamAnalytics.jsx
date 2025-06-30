@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import TeamComparisonChart from '../components/TeamComparisonChart'
+// import TeamComparisonChart from '../components/TeamComparisonChart'
 import {apiCall} from '../utils/api'
 
 export default function TeamAnalytics() {
@@ -7,14 +7,19 @@ export default function TeamAnalytics() {
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
+    console.log('🔍 Analytics page - about to make API call')
     apiCall('/api/v1/teams/')
-      .then(response => response.json())
+      .then(response => {
+        console.log('✅ Analytics API response:', response.status)
+        return response.json()
+      })
       .then(data => {
+        console.log('📊 Analytics data loaded:', data.length, 'teams')
         setTeams(data)
         setLoading(false)
       })
       .catch(error => {
-        console.error('API Error:', error)
+        console.error('❌ Analytics API Error:', error)
         setLoading(false)
       })
   }, [])
@@ -34,7 +39,8 @@ export default function TeamAnalytics() {
         </p>
       </div>
 
-      <TeamComparisonChart teams={teams} />
+      <div>Loaded {teams.length} teams - Chart temporarily disabled for debugging</div>
+      {/* <TeamComparisonChart teams={teams} /> */}
     </div>
   )
 }
