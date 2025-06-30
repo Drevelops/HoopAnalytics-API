@@ -81,3 +81,41 @@ async def seed_database():
         }
     except Exception as e:
         return {"error": f"❌ Seeding failed: {str(e)}"}
+    
+
+@app.get('/admin/debug-routes')
+async def debug_routes():
+    """Debug what routes are registered"""
+    routes = []
+    for route in app.routes:
+        if hasattr(route, 'path') and hasattr(route, 'methods'):
+            routes.append({
+                "path": route.path,
+                "methods": list(route.methods),
+                "name": getattr(route, 'name', 'unknown')
+            })
+    
+    return {"routes": routes}
+
+@app.get('/api/v1/test-teams')
+async def test_teams():
+    """Simple test to get teams without schemas"""
+    try:
+        from app.database import Session
+        from app.models.team import Teams
+        
+        db = Session()
+        teams = db.query(Teams).limit(5).all()
+        
+        result = []
+        for team in teams:
+            result.append({
+                "id": team.id,
+                "name": team.team_name,
+                "city": team.city
+            })
+        
+        db.close()
+        return {"teams": result, "count": len(result)}
+    except Exception as e:
+        return {"error": str(e)}
