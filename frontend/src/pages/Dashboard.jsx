@@ -22,6 +22,7 @@ ChartJS.register(
   ArcElement
 )
 
+
 export default function Dashboard() {
   const [players, setPlayers] = useState([])
   const [teams, setTeams] = useState([])
@@ -29,13 +30,19 @@ export default function Dashboard() {
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
-    // Fetch all data for dashboard
-     const baseUrl = 'https://web-production-eab4a.up.railway.app';
-
+    console.log('🔍 DEBUG INFO:');
+    console.log('VITE_API_URL from env:', import.meta.env.VITE_API_URL);
+    console.log('Type:', typeof import.meta.env.VITE_API_URL);
+    console.log('All env vars:', import.meta.env);
+    
+    // Force HTTPS for now
+    const apiUrl = import.meta.env.VITE_API_URL?.replace('http://', 'https://') || 'https://web-production-eab4a.up.railway.app';
+    console.log('Final API URL being used:', apiUrl);
+    
     Promise.all([
-      fetch(`${baseUrl}/api/v1/players/`),
-      fetch(`${baseUrl}/api/v1/teams/`),
-      fetch(`${baseUrl}/api/v1/players/stats/`)
+      fetch(`${apiUrl}/api/v1/players/`),
+      fetch(`${apiUrl}/api/v1/teams/`),
+      fetch(`${apiUrl}/api/v1/players/stats/`)
     ])
     .then(async ([playersResponse, teamsResponse, statsResponse]) => {
       const playersData = await playersResponse.json()
