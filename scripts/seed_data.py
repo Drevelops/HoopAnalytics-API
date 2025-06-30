@@ -96,24 +96,54 @@ def standardize_position(position: str) -> str:
     if not position:
         return 'G'
     
-    position = position.upper().strip()
+    # Clean the position string
+    position = str(position).upper().strip()
+    
+    # Handle None or empty values
+    if position in ['NONE', 'NULL', '']:
+        return 'G'
     
     # Map common variations
     position_map = {
-        'GUARD': 'G',
         'POINT GUARD': 'PG',
-        'SHOOTING GUARD': 'SG',
-        'FORWARD': 'F',
+        'SHOOTING GUARD': 'SG', 
         'SMALL FORWARD': 'SF',
         'POWER FORWARD': 'PF',
-        'CENTER': 'C',
-        'FORWARD-GUARD': 'G-F',
+        'FORWARD-GUARD': 'F-G',
         'GUARD-FORWARD': 'G-F',
         'FORWARD-CENTER': 'F-C',
-        'CENTER-FORWARD': 'F-C'
+        'CENTER-FORWARD': 'C-F',
+        'GUARD': 'G',
+        'FORWARD': 'F',
+        'CENTER': 'C',
+        'PG': 'PG',
+        'SG': 'SG',
+        'SF': 'SF',
+        'PF': 'PF',
+        'G': 'G',
+        'F': 'F',
+        'C': 'C'
     }
     
-    return position_map.get(position, position[:2] if len(position) > 2 else position)
+    # Try exact match first
+    if position in position_map:
+        return position_map[position]
+    
+    # Handle hyphenated positions
+    if '-' in position:
+        parts = position.split('-')
+        if len(parts) == 2:
+            first = parts[0].strip()
+            second = parts[1].strip()
+            
+            # Map each part
+            first_mapped = position_map.get(first, first[:1] if first else 'G')
+            second_mapped = position_map.get(second, second[:1] if second else 'F')
+            
+            return f"{first_mapped}-{second_mapped}"
+    
+    # Fallback to first character or default
+    return position[:1] if position else 'G'
 
 def parse_height(height_str: str) -> str:
     """Convert height to standard format"""
@@ -137,41 +167,57 @@ def parse_height(height_str: str) -> str:
     return "6'6\""
 
 def get_current_players():
-    """Get current NBA players from multiple teams"""
+    """Get current NBA players, prioritizing star players"""
     players_data = []
-    teams = teams.get_teams()
+    nba_teams_list = teams.get_teams()
     
-    # Get players from top teams to ensure we get stars
+    # Star players to prioritize (by name)
+    star_players = [
+        'LeBron James', 'Stephen Curry', 'Luka Doncic', 'Giannis Antetokounmpo',
+        'Nikola Jokic', 'Joel Embiid', 'Jayson Tatum', 'Kevin Durant',
+        'Kawhi Leonard', 'Anthony Davis', 'Damian Lillard', 'Jimmy Butler',
+        'Devin Booker', 'Anthony Edwards', 'Ja Morant', 'Trae Young',
+        'Donovan Mitchell', 'Karl-Anthony Towns', 'Zion Williamson',
+        'Paolo Banchero', 'Victor Wembanyama', 'Scottie Barnes'
+    ]
+    
+    # Prioritize teams with more star players
     priority_teams = ['LAL', 'GSW', 'BOS', 'MIL', 'DEN', 'PHX', 'MIA', 'NYK', 'DAL', 'PHI']
     
-    for team in teams:
-        if team['abbreviation'] in priority_teams:
-            print(f"Getting players from {team['full_name']}...")
+    print("🌟 First, looking for star players...")
+    
+    # First pass: Look for star players across all teams
+    for team in nba_teams_list:
+        try:
+            roster = commonteamroster.CommonTeamRoster(team_id=team['id'])
+            roster_df = roster.get_data_frames()[0]
             
-            try:
-                # Get team roster
-                roster = commonteamroster.CommonTeamRoster(team_id=team['id'])
-                roster_df = roster.get_data_frames()[0]
+            for _, player_row in roster_df.iterrows():
+                player_name = str(player_row['PLAYER'])
                 
-                for _, player_row in roster_df.iterrows():
+                # Check if this is a star player
+                if any(star in player_name for star in star_players):
                     player_id = player_row['PLAYER_ID']
                     
-                    # Skip if we already have this player
+                    # Skip if already added
                     if any(p['id'] == player_id for p in players_data):
                         continue
                     
                     try:
-                        # Get detailed player info
                         player_info = commonplayerinfo.CommonPlayerInfo(player_id=player_id)
                         info_df = player_info.get_data_frames()[0]
                         
                         if not info_df.empty:
                             player_data_row = info_df.iloc[0]
                             
+                            # Clean the position data
+                            raw_position = player_row.get('POSITION', '')
+                            clean_position = standardize_position(raw_position)
+                            
                             player_data = {
                                 'id': int(player_id),
-                                'name': str(player_row['PLAYER']),
-                                'position': standardize_position(player_row.get('POSITION', 'G')),
+                                'name': player_name,
+                                'position': clean_position,
                                 'height': parse_height(player_data_row.get('HEIGHT', '6-6')),
                                 'weight': int(player_data_row.get('WEIGHT', 200)) if player_data_row.get('WEIGHT') else 200,
                                 'team_id': int(team['id']),
@@ -182,22 +228,75 @@ def get_current_players():
                             }
                             
                             players_data.append(player_data)
-                            print(f"  ✅ Added {player_data['name']}")
+                            print(f"  ⭐ Added STAR: {player_name} ({clean_position}) - {team['abbreviation']}")
                             
-                            # Limit to avoid too much data for demo
-                            if len(players_data) >= 50:
-                                break
-                                
+                            time.sleep(0.5)  # Rate limiting
+                            
                     except Exception as e:
-                        print(f"  ❌ Error getting info for {player_row['PLAYER']}: {e}")
+                        print(f"  ❌ Error getting star player {player_name}: {e}")
+                        continue
+                        
+        except Exception as e:
+            print(f"❌ Error getting roster for {team['full_name']}: {e}")
+            continue
+    
+    print(f"\n✅ Found {len(players_data)} star players")
+    
+    # Second pass: Fill remaining spots with players from priority teams
+    print(f"\n👥 Now adding other players from priority teams...")
+    
+    for team in nba_teams_list:
+        if team['abbreviation'] in priority_teams and len(players_data) < 50:
+            try:
+                roster = commonteamroster.CommonTeamRoster(team_id=team['id'])
+                roster_df = roster.get_data_frames()[0]
+                
+                for _, player_row in roster_df.iterrows():
+                    if len(players_data) >= 50:
+                        break
+                        
+                    player_id = player_row['PLAYER_ID']
+                    
+                    # Skip if already added
+                    if any(p['id'] == player_id for p in players_data):
+                        continue
+                    
+                    try:
+                        player_info = commonplayerinfo.CommonPlayerInfo(player_id=player_id)
+                        info_df = player_info.get_data_frames()[0]
+                        
+                        if not info_df.empty:
+                            player_data_row = info_df.iloc[0]
+                            player_name = str(player_row['PLAYER'])
+                            
+                            # Clean the position data
+                            raw_position = player_row.get('POSITION', '')
+                            clean_position = standardize_position(raw_position)
+                            
+                            player_data = {
+                                'id': int(player_id),
+                                'name': player_name,
+                                'position': clean_position,
+                                'height': parse_height(player_data_row.get('HEIGHT', '6-6')),
+                                'weight': int(player_data_row.get('WEIGHT', 200)) if player_data_row.get('WEIGHT') else 200,
+                                'team_id': int(team['id']),
+                                'team_name': team['full_name'],
+                                'age': int(player_row.get('AGE', 25)) if player_row.get('AGE') else 25,
+                                'college': str(player_data_row.get('SCHOOL', 'Unknown')),
+                                'country': str(player_data_row.get('COUNTRY', 'USA'))
+                            }
+                            
+                            players_data.append(player_data)
+                            print(f"  ✅ Added: {player_name} ({clean_position}) - {team['abbreviation']}")
+                            
+                            time.sleep(0.5)
+                            
+                    except Exception as e:
+                        print(f"  ❌ Error getting player {player_row['PLAYER']}: {e}")
                         continue
                 
-                # Rate limiting
-                time.sleep(2)
+                time.sleep(1)  # Longer pause between teams
                 
-                if len(players_data) >= 50:
-                    break
-                    
             except Exception as e:
                 print(f"❌ Error getting roster for {team['full_name']}: {e}")
                 continue
@@ -230,7 +329,7 @@ def get_player_season_stats(player_id: int) -> Optional[dict]:
     except Exception as e:
         print(f"Error getting stats for player {player_id}: {e}")
         return None
-
+    
 def populate_nba_data():
     """Populate database with comprehensive NBA data"""
     db = Session()

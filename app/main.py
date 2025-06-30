@@ -67,3 +67,17 @@ def root():
 @app.get('/health')
 def health_check():
     return {"status": "healthy", "message": "NBA Analytics API is running"}
+
+@app.post('/admin/seed-database')
+async def seed_database():
+    """Populate database with NBA data - USE ONLY ONCE!"""
+    try:
+        # comprehensive seed function
+        from scripts.seed_data import populate_nba_data 
+        populate_nba_data()
+        return {
+            "message": "✅ Database seeded successfully!", 
+            "data": "30 NBA teams, 50+ players, 30+ player stats"
+        }
+    except Exception as e:
+        return {"error": f"❌ Seeding failed: {str(e)}"}
