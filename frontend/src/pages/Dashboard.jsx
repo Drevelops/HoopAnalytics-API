@@ -34,7 +34,7 @@ export default function Dashboard() {
     Promise.all([
       apiCall('/api/v1/players/'),
       apiCall('/api/v1/teams/'),
-      apiCall('/api/v1/players/stats/')
+      apiCall('/api/v1/players/stats')
     ])
     .then(async ([playersResponse, teamsResponse, statsResponse]) => {
       const playersData = await playersResponse.json()
