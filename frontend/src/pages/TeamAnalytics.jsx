@@ -1,12 +1,13 @@
 import { useState, useEffect } from 'react'
 import TeamComparisonChart from '../components/TeamComparisonChart'
+import {apiCall} from '../utils/api'
 
 export default function TeamAnalytics() {
   const [teams, setTeams] = useState([])
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
-    fetch(`${import.meta.env.VITE_API_URL}/api/v1/teams/`)
+    apiCall('/api/v1/teams/')
       .then(response => response.json())
       .then(data => {
         setTeams(data)

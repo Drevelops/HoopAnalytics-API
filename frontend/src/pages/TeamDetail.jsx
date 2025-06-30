@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react'
 import { Link, useParams } from 'react-router-dom'
+import {apiCall} from '../utils/api'
 
 function getNBATeamURL(abbreviation) {
   const teamURLMap = {
@@ -49,8 +50,8 @@ export default function TeamDetail() {
     console.log('Starting API calls for team:', team_id)
     
     Promise.all([
-      fetch(`${import.meta.env.VITE_API_URL}/api/v1/teams/${team_id}`),
-      fetch(`${import.meta.env.VITE_API_URL}/api/v1/players/`)
+      apiCall(`/api/v1/teams/${team_id}`),
+      apiCall('/api/v1/players/')
     ])
     .then(async ([teamResponse, playersResponse]) => {
       const teamData = await teamResponse.json()

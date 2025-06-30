@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
+import {apiCall} from '../utils/api'
 
 export default function PlayersList() {
   const [players, setPlayers] = useState([])
@@ -16,7 +17,7 @@ export default function PlayersList() {
   const uniquePositions = [...new Set(players.map(p => p.position))].sort()
 
   useEffect(() => {
-    fetch(`${import.meta.env.VITE_API_URL}/api/v1/players/`)
+    apiCall('/api/v1/players/')
       .then(response => response.json())
       .then(data => {
         setPlayers(data)

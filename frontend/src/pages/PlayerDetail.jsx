@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import PlayerStatsChart from '../components/PlayerStatsChart'
+import {apiCall} from '../utils/api'
 
 export default function PlayerDetail() {
   const { player_id } = useParams()
@@ -10,9 +11,9 @@ export default function PlayerDetail() {
 
   useEffect(() => {
     Promise.all([
-      fetch(`${import.meta.env.VITE_API_URL}/api/v1/players/${player_id}`),
-      fetch(`${import.meta.env.VITE_API_URL}/api/v1/players/${player_id}/stats`),
-      fetch(`${import.meta.env.VITE_API_URL}/api/v1/players/`)
+      apiCall(`/api/v1/players/${player_id}`),
+      apiCall(`/api/v1/players/${player_id}/stats`),
+      apiCall('/api/v1/players/')
     ])
     .then(async ([playerResponse, statsResponse]) => {
       const playerData = await playerResponse.json()

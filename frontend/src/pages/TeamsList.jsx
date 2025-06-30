@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
+import {apiCall} from '../utils/api'
 
 export default function TeamsList() {
   const [teams, setTeams] = useState([])
@@ -16,7 +17,7 @@ export default function TeamsList() {
   const uniqueDivisions = [...new Set(teams.map(t => t.division))].sort()
 
   useEffect(() => {
-    fetch(`${import.meta.env.VITE_API_URL}/api/v1/teams/`)
+    apiCall('/api/v1/teams/')
       .then(response => response.json())
       .then(data => {
         setTeams(data)
